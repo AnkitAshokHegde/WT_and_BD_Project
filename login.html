@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Login Page</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+  </link>
+  <link rel="stylesheet" href="login.css">
+</head>
+
+<body>
+  <form id="form">
+    <h1>Login</h1>
+    <div class="formcontainer">
+      <hr />
+      <div class="container">
+        <label for="uname"><strong>Email</strong></label>
+        <input type="text" placeholder="Enter Username" name="EmailAddress" required>
+        <label for="psw"><strong>Password</strong></label>
+        <input type="password" placeholder="Enter Password" name="password" required>
+      </div>
+      <button type="submit">Login</button>
+      <div class="container" style="background-color: white">
+        <label style="padding-left: 15px">
+        </label>
+      </div>
+  </form>
+</body>
+<script>
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const form = new FormData(e.target);
+    const data = Object.fromEntries(form)
+    fetch('/api/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        if (data) {
+          localStorage.setItem("user_email", data.EmailAddress);
+          window.location.href = "/";
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  }
+  const loginForm = document.getElementById("form");
+  loginForm.addEventListener("submit", handleSubmit)
+</script>
+
+</html>
